@@ -26,9 +26,6 @@ namespace Web_IO
 
         #endregion
 
-
-
-
         #region methods
         static void MainAppData()
         {
@@ -43,9 +40,6 @@ namespace Web_IO
         }
 
         #endregion
-
-       
-
     }
 
 
