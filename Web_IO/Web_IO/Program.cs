@@ -26,7 +26,7 @@ namespace Web_IO
 
             //TIPP: Zum Zerlegen eines Textes x in einzelne Zeilen kann die Funktion x.Split('\n') verwendet werden. \n ist das Kürzel für NewLine
         }
-        public static void Exeptions(int errorCode)
+        public static void PrintErrorMessage(int errorCode)
         {
             #region errorCodes
             if (errorCode != 0)

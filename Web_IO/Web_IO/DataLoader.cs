@@ -16,10 +16,11 @@ namespace Web_IO
             //Die Klasse DataLoader soll unter Angabe von Max- oder Min Werten für das Property Price, Reviews und/oder Size
             //nur jene Daten zurückgeben welche dem Filterkriterium entsprechen
         }
-        public static AppData ReadDatasFromCsv(string csvString, char seperator, out int error)
+        public static AppData ReadDatasFromCsv(string csvString, char seperator)
         {
-            error = 0;
+            int error = 0;
             AppData readDatas = new AppData();
+
             try
             {
 
@@ -34,78 +35,25 @@ namespace Web_IO
                 readDatas.Rating = int.Parse(place[2]);
                 readDatas.Reviews = int.Parse(place[3]);
                 readDatas.Size = place[4];
-                readDatas.Installs = double.Parse(place[5].Replace(',', '.'));
+                string reducedInstall = place[5].Replace(",", "");
+                readDatas.Installs = double.Parse(reducedInstall.Trim('+'));
                 readDatas.Type = (Enums.Type)Enum.Parse(typeof(Enums.Type), place[6]);
                 readDatas.Price = double.Parse(place[7].Replace('.', ','));
                 readDatas.ContentRating = place[8];
-                readDatas.Genres = (Enums.Genres)Enum.Parse(typeof(Enums.Genres), place[9]);
+                string reducedGenre = place[9].Replace("&",string.Empty);
+                reducedGenre= reducedGenre.Replace(" ",string.Empty);
+                readDatas.Genres = (Enums.Genres)Enum.Parse(typeof(Enums.Genres), reducedGenre);
                 readDatas.LastUpdated = DateTime.Parse(place[10]);
                 readDatas.CurrentVersion = place[11];
                 readDatas.AndroidVersion = place[12];
             }
             #region catches
-            catch (ArgumentOutOfRangeException)
+            catch (Exception ex)
             {
-                error = 15;
-            }
-            catch (ArgumentNullException)
-            {
-                error = 1;
-            }
-            catch (ArgumentException)
-            {
-                error = 2;
-            }
-            catch (OutOfMemoryException)
-            {
-                error = 14;
-            }
-            catch (FormatException)
-            {
-                error = 9;
-            }
-            catch (OverflowException)
-            {
-                error = 10;
-            }
-            catch (IndexOutOfRangeException)
-            {
-                error = 11;
-            }
-            catch (NotSupportedException)
-            {
-                error = 12;
-            }
-            catch (DirectoryNotFoundException)
-            {
-                error = 3;
-            }
-            catch (PathTooLongException)
-            {
-                error = 4;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                error = 5;
-            }
-            catch (System.Security.SecurityException)
-            {
-                error = 13;
-            }
-            catch (FileNotFoundException)
-            {
-                error = 6;
-            }
-            catch (IOException)
-            {
-                error = 7;
-            }
-            catch (Exception)
-            {
-                error = 8;
+                error = GetErrorCodeFromExeption(ex);
             }
 
-            Program.Exeptions(error);
+            Program.PrintErrorMessage(error);
             #endregion
 
             return readDatas;
@@ -123,7 +71,7 @@ namespace Web_IO
             while (reader.Peek() != -1)
             {
                 string line = reader.ReadLine();
-
+                AppData readProducts = ReadDatasFromCsv(line, ';');
             }
 
             string[] values = content.Split('\n');
@@ -138,6 +86,81 @@ namespace Web_IO
             //Option für Profis / Fleißaufgabe
             //Integrieren Sie den DataLoader in Ihren Webshop zum Einkaufen von Apps über ihr Webshop Programm
             return list.ToArray();
+        }
+        private static int GetErrorCodeFromExeption(Exception exception)
+        {
+            if (exception is IOException)
+            {
+                return 1;
+            }
+
+            return -1;
+            //            #region catches
+            //catch (ArgumentOutOfRangeException)
+            //{
+            //    error = 15;
+            //}
+            //catch (ArgumentNullException)
+            //{
+            //    error = 1;
+            //}
+            //catch (ArgumentException)
+            //{
+            //    error = 2;
+            //}
+            //catch (OutOfMemoryException)
+            //{
+            //    error = 14;
+            //}
+            //catch (FormatException)
+            //{
+            //    error = 9;
+            //}
+            //catch (OverflowException)
+            //{
+            //    error = 10;
+            //}
+            //catch (IndexOutOfRangeException)
+            //{
+            //    error = 11;
+            //}
+            //catch (NotSupportedException)
+            //{
+            //    error = 12;
+            //}
+            //catch (DirectoryNotFoundException)
+            //{
+            //    error = 3;
+            //}
+            //catch (PathTooLongException)
+            //{
+            //    error = 4;
+            //}
+            //catch (UnauthorizedAccessException)
+            //{
+            //    error = 5;
+            //}
+            //catch (System.Security.SecurityException)
+            //{
+            //    error = 13;
+            //}
+            //catch (FileNotFoundException)
+            //{
+            //    error = 6;
+            //}
+            //catch (IOException)
+            //{
+            //    error = 7;
+            //}
+            //catch (Exception)
+            //{
+            //    error = 8;
+            //}
+
+            //Program.Exeptions(error);
+            //#endregion
+
+
         }
 
     }
