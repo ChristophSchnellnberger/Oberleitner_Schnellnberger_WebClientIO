@@ -12,6 +12,11 @@ namespace Web_IO
     {
         static void Main(string[] args)
         {
+            string adressHeFIAP = "https://fhwels.s3.eu-central-1.amazonaws.com/PRO1UE_WS21/HealthFitnessApps.CSV";
+            string adressPhoApp = "https://fhwels.s3.eu-central-1.amazonaws.com/PRO1UE_WS21/PhotographyApps.CSV";
+            string adressWeaApp = "https://fhwels.s3.eu-central-1.amazonaws.com/PRO1UE_WS21/WeatherApps.CSV";
+
+
         }
 
         public static void Vorlage()
@@ -35,6 +40,11 @@ namespace Web_IO
             {
                 Console.WriteLine(line);
             }
+            //Laden der Daten mit dem WebClient aus 3 Datenquellen (entspricht 3 Kategorien von Apps)
+            // Eingabe der Filterkriterien in der Console für alle Apps(oder auf Wunsch auf kategoriespezifisch)
+            //Ausgabe der Daten aller 3 Datenquellen am Bildschirm und in eine(!) Datei
+            //Option für Profis / Fleißaufgabe
+            //Integrieren Sie den DataLoader in Ihren Webshop zum Einkaufen von Apps über ihr Webshop Programm
         }
     }
 }
