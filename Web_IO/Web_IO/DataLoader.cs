@@ -29,17 +29,19 @@ namespace Web_IO
                 }
 
                 string[] place = csvString.Split(seperator);
-
-                readDatas.ActualDate = DateTime.Parse(place[0]);
-                readDatas.TempAverage = double.Parse(place[1].Replace('.', ','));
-                readDatas.TempMinimum = double.Parse(place[2].Replace('.', ','));
-                readDatas.TempMaximum = double.Parse(place[3].Replace('.', ','));
-                readDatas.AirPressure = double.Parse(place[4].Replace('.', ','));
-                readDatas.SnowFall = double.Parse(place[5].Replace('.', ','));
-                readDatas.WindDirection = double.Parse(place[6].Replace('.', ','));
-                readDatas.WindSpeed = double.Parse(place[7].Replace('.', ','));
-                readDatas.WeakPerfectGraphTheorem = double.Parse(place[8].Replace('.', ','));
-                readDatas.SunTime = double.Parse(place[9].Replace('.', ','));
+                readDatas.App = place[0];
+                readDatas.Category = place[1];
+                readDatas.Rating = int.Parse(place[2]);
+                readDatas.Reviews = int.Parse(place[3]);
+                readDatas.Size = place[4];
+                readDatas.Installs = double.Parse(place[5].Replace(',', '.'));
+                readDatas.Type = (Enums.Type)Enum.Parse(typeof(Enums.Type), place[6]);
+                readDatas.Price = double.Parse(place[7].Replace('.', ','));
+                readDatas.ContentRating = place[8];
+                readDatas.Genres = (Enums.Genres)Enum.Parse(typeof(Enums.Genres), place[9]);
+                readDatas.LastUpdated = DateTime.Parse(place[10]);
+                readDatas.CurrentVersion = place[11];
+                readDatas.AndroidVersion = place[12];
             }
             #region catches
             catch (ArgumentOutOfRangeException)
