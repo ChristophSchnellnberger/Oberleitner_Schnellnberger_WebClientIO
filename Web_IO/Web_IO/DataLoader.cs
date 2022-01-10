@@ -67,11 +67,13 @@ namespace Web_IO
             string content = client.DownloadString(adressWeb);
             Stream contentStream = client.OpenRead(adressWeb);
             StreamReader reader = new StreamReader(contentStream);
-
+           
             while (reader.Peek() != -1)
             {
-                string line = reader.ReadLine();
-                AppData readProducts = ReadDatasFromCsv(line, ';');
+                //if (reader.Peek=0)
+                //string line = reader.ReadLine();
+                //AppData readProducts = ReadDatasFromCsv(line, ';');
+
             }
 
             string[] values = content.Split('\n');
