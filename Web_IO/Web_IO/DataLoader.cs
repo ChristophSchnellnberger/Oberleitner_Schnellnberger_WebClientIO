@@ -8,6 +8,11 @@ namespace Web_IO
 {
     internal class DataLoader
     {
-        //Die Klasse DataLoader soll unter Angabe eines Links die Daten laden und als Array oder Liste von AppData Objekten zurückgeben
-    }//Die Klasse DataLoader soll unter Angabe von Max- oder Min Werten für das Property Price, Reviews und/oder Size nur jene Daten zurückgeben welche dem Filterkriterium entsprechen
+        static void MainDataLoader()
+        {
+            //Die Klasse DataLoader soll unter Angabe eines Links die Daten laden und als Array oder Liste von AppData Objekten zurückgeben
+            //Die Klasse DataLoader soll unter Angabe von Max- oder Min Werten für das Property Price, Reviews und/oder Size
+            //nur jene Daten zurückgeben welche dem Filterkriterium entsprechen
+        }
+    }   
 }
