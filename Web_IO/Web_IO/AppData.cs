@@ -15,7 +15,7 @@ namespace Web_IO
         public int Rating { get; set; }
         public int Reviews { get; set; }
         public string Size { get; set; }
-        public int Installs { get; set; }
+        public double Installs { get; set; }
         public Enums.Type Type { get; set; }
         public double Price { get; set; }
         public string ContentRating { get; set; }
