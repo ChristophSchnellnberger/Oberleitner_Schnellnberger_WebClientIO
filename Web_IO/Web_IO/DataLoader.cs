@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,5 +16,127 @@ namespace Web_IO
             //Die Klasse DataLoader soll unter Angabe von Max- oder Min Werten für das Property Price, Reviews und/oder Size
             //nur jene Daten zurückgeben welche dem Filterkriterium entsprechen
         }
-    }   
+        public static AppData ReadDatasFromCsv(string csvString, char seperator, out int error)
+        {
+            error = 0;
+            AppData readDatas = new AppData();
+            try
+            {
+
+                if (csvString.Contains(",,"))
+                {
+                    csvString = csvString.Replace(",,", ",0,");
+                }
+
+                string[] place = csvString.Split(seperator);
+
+                readDatas.ActualDate = DateTime.Parse(place[0]);
+                readDatas.TempAverage = double.Parse(place[1].Replace('.', ','));
+                readDatas.TempMinimum = double.Parse(place[2].Replace('.', ','));
+                readDatas.TempMaximum = double.Parse(place[3].Replace('.', ','));
+                readDatas.AirPressure = double.Parse(place[4].Replace('.', ','));
+                readDatas.SnowFall = double.Parse(place[5].Replace('.', ','));
+                readDatas.WindDirection = double.Parse(place[6].Replace('.', ','));
+                readDatas.WindSpeed = double.Parse(place[7].Replace('.', ','));
+                readDatas.WeakPerfectGraphTheorem = double.Parse(place[8].Replace('.', ','));
+                readDatas.SunTime = double.Parse(place[9].Replace('.', ','));
+            }
+            #region catches
+            catch (ArgumentOutOfRangeException)
+            {
+                error = 15;
+            }
+            catch (ArgumentNullException)
+            {
+                error = 1;
+            }
+            catch (ArgumentException)
+            {
+                error = 2;
+            }
+            catch (OutOfMemoryException)
+            {
+                error = 14;
+            }
+            catch (FormatException)
+            {
+                error = 9;
+            }
+            catch (OverflowException)
+            {
+                error = 10;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                error = 11;
+            }
+            catch (NotSupportedException)
+            {
+                error = 12;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                error = 3;
+            }
+            catch (PathTooLongException)
+            {
+                error = 4;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                error = 5;
+            }
+            catch (System.Security.SecurityException)
+            {
+                error = 13;
+            }
+            catch (FileNotFoundException)
+            {
+                error = 6;
+            }
+            catch (IOException)
+            {
+                error = 7;
+            }
+            catch (Exception)
+            {
+                error = 8;
+            }
+
+            Program.Exeptions(error);
+            #endregion
+
+            return readDatas;
+        }
+
+        public static AppData[] ReadFromFile(string adressWeb)
+        {
+            List<AppData> list = new List<AppData>();
+
+            WebClient client = new WebClient();
+            string content = client.DownloadString(adressWeb);
+            Stream contentStream = client.OpenRead(adressWeb);
+            StreamReader reader = new StreamReader(contentStream);
+
+            while (reader.Peek() != -1)
+            {
+                string line = reader.ReadLine();
+
+            }
+
+            string[] values = content.Split('\n');
+
+            foreach (var value in values)
+            {
+
+            }
+            //Laden der Daten mit dem WebClient aus 3 Datenquellen (entspricht 3 Kategorien von Apps)
+            // Eingabe der Filterkriterien in der Console für alle Apps(oder auf Wunsch auf kategoriespezifisch)
+            //Ausgabe der Daten aller 3 Datenquellen am Bildschirm und in eine(!) Datei
+            //Option für Profis / Fleißaufgabe
+            //Integrieren Sie den DataLoader in Ihren Webshop zum Einkaufen von Apps über ihr Webshop Programm
+            return list.ToArray();
+        }
+
+    }
 }
