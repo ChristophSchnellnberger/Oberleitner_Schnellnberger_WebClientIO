@@ -30,7 +30,7 @@ namespace Web_IO
             Greeting();
             int[] chosenNumbers = MainMenu(commentLine, healthFitnessApp, photographyApp, weatherApp);
             AppData[] filteredDatas = DataLoader.ProcessingUserInput(chosenNumbers, healthFitnessApp, photographyApp, weatherApp);
-
+            PlotFilteredDatas(filteredDatas);
             //TIPP: Zum Zerlegen eines Textes x in einzelne Zeilen kann die Funktion x.Split('\n') verwendet werden. \n ist das Kürzel für NewLine
         }
         private static void Greeting()
@@ -211,6 +211,23 @@ namespace Web_IO
                 choosement = true;
             }
             return choosement;
+        }
+        private static void PlotFilteredDatas(AppData[] filteredDatas)
+        {
+            Console.WriteLine("Here you can see your filtered apps: ");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("The app's are from the category: " + filteredDatas[0].Genres);
+            Console.WriteLine();
+            foreach (AppData data in filteredDatas)
+            {
+                
+
+                Console.WriteLine(data.App +"| |"+ data.Category + "| |" + data.Rating + "| |" + data.Reviews + "| |" + data.Size + "| |" +
+                    data.Installs + "| |" + data.Type + "| |" + data.Price + "| |" + data.ContentRating + "| |" + data.LastUpdated + "| |" +
+                    data.CurrentVersion + "| |" + data.AndroidVersion);
+                Console.WriteLine();
+            }
         }
     }
 }

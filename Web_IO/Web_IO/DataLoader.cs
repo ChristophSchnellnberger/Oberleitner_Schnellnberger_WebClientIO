@@ -87,6 +87,7 @@ namespace Web_IO
 
             Program.PrintErrorMessage(error);
             #endregion
+
             return readDatas;
         }
         public static AppData[] ReadFromFile(string adressWeb,char seperator)
@@ -110,7 +111,8 @@ namespace Web_IO
 
                 //Read other lines
                 string line = reader.ReadLine();
-                AppData readProducts = ReadDatasFromCsv(line, seperator);              
+                AppData readProducts = ReadDatasFromCsv(line, seperator);
+                list.Add(readProducts);
             }
 
 
@@ -204,37 +206,56 @@ namespace Web_IO
             List<AppData> returnList = new List<AppData>();
             int lowerBound = choosenNumbers[2];
             int upperBound = choosenNumbers[3];
+            int currentTypeNumber = 0;
+            int i = 0;
 
             switch (choosenNumbers[0])
             {
                 case 0:
                     {
-                        currentArray = photographyApp;
-                        currentType = photographyApp[choosenNumbers[1]];
+                        currentArray = photographyApp;                       
                         break;
                     }
                 case 1:
                     {
                         currentArray=weatherApp;
-                        currentType = weatherApp[choosenNumbers[1]];
                         break;
                     }
                 case 2:
                     {
                         currentArray = healthFitnessApp;
-                        currentType = healthFitnessApp[choosenNumbers[1]];
                         break;
                     }
             }
-            for(int i = 0; i < currentArray.Length ; i++)
+            switch (choosenNumbers[1])
             {
-                int currentTypeNumber = int.Parse(currentType.ToString());
+                case 3:
+                    {
+                        for (i = 0; i < currentArray.Length; i++)
+                        {
 
-                if (currentTypeNumber <= upperBound && currentTypeNumber >= lowerBound)
-                {
-                    returnList.Add(currentArray[i]);
-                }
+                            currentTypeNumber = currentArray[i].Rating;
+                            
+                            if (currentTypeNumber <= upperBound && currentTypeNumber >= lowerBound)
+                            {
+                                returnList.Add(currentArray[i]);
+                            }                           
+                        }
+                        break;
+                    }
+                case 4:
+                    {
+                        currentTypeNumber = int.Parse(currentArray[i].Price);
+                        break;
+                    }
+                case 7:
+                    {
+                        currentTypeNumber = int.Parse(currentArray[i].Size);
+                        break;
+                    }
             }
+
+            
             return returnList.ToArray();
 
         }
