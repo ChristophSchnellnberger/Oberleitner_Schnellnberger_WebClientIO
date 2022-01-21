@@ -65,17 +65,17 @@ namespace Web_IO
                 readDatas.App = place[0];
                 readDatas.Category = place[1];
                 readDatas.Rating = int.Parse(place[2]);
-                readDatas.Reviews = int.Parse(place[3]);
+                readDatas.Reviews = place[3];
                 readDatas.Size = place[4];
                 string reducedInstall = place[5].Replace(",", "");
-                readDatas.Installs = double.Parse(reducedInstall.Trim('+'));
+                readDatas.Installs = reducedInstall;//double.Parse(reducedInstall.Trim('+'))
                 readDatas.Type = (Enums.Type)Enum.Parse(typeof(Enums.Type), place[6]);
-                readDatas.Price = double.Parse(place[7].Replace('.', ','));
+                readDatas.Price = place[7];//double.Parse(place[7].Replace('.', ','))
                 readDatas.ContentRating = place[8];
                 string reducedGenre = place[9].Replace("&",string.Empty);
                 reducedGenre= reducedGenre.Replace(" ",string.Empty);
-                readDatas.Genres = (Enums.Genres)Enum.Parse(typeof(Enums.Genres), reducedGenre);
-                readDatas.LastUpdated = DateTime.Parse(place[10]);
+                readDatas.Genres = reducedGenre; //(Enums.Genres)Enum.Parse(typeof(Enums.Genres), reducedGenre);
+                readDatas.LastUpdated = place[10];
                 readDatas.CurrentVersion = place[11];
                 readDatas.AndroidVersion = place[12];
             }
@@ -197,8 +197,45 @@ namespace Web_IO
 
 
         }
-        public static void ProcessingUserInput(int[] choosenNumbers, AppData[] healthFitnessApp, AppData[] photographyApp, AppData[] weatherApp)
+        public static AppData[] ProcessingUserInput(int[] choosenNumbers, AppData[] healthFitnessApp, AppData[] photographyApp, AppData[] weatherApp)
         {
+            AppData currentType= default;
+            AppData[] currentArray = healthFitnessApp;
+            List<AppData> returnList = new List<AppData>();
+            int lowerBound = choosenNumbers[2];
+            int upperBound = choosenNumbers[3];
+
+            switch (choosenNumbers[0])
+            {
+                case 0:
+                    {
+                        currentArray = photographyApp;
+                        currentType = photographyApp[choosenNumbers[1]];
+                        break;
+                    }
+                case 1:
+                    {
+                        currentArray=weatherApp;
+                        currentType = weatherApp[choosenNumbers[1]];
+                        break;
+                    }
+                case 2:
+                    {
+                        currentArray = healthFitnessApp;
+                        currentType = healthFitnessApp[choosenNumbers[1]];
+                        break;
+                    }
+            }
+            for(int i = 0; i < currentArray.Length ; i++)
+            {
+                int currentTypeNumber = int.Parse(currentType.ToString());
+
+                if (currentTypeNumber <= upperBound && currentTypeNumber >= lowerBound)
+                {
+                    returnList.Add(currentArray[i]);
+                }
+            }
+            return returnList.ToArray();
 
         }
     }

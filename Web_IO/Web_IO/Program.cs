@@ -25,11 +25,11 @@ namespace Web_IO
             AppData[] photographyApp = DataLoader.ReadFromFile(adressPhoApp, seperator);
             AppData[] weatherApp = DataLoader.ReadFromFile(adressWeaApp, seperator);
             #endregion
-
+            
             //Console output
             Greeting();
             int[] chosenNumbers = MainMenu(commentLine, healthFitnessApp, photographyApp, weatherApp);
-            DataLoader.ProcessingUserInput(chosenNumbers, healthFitnessApp, photographyApp, weatherApp);
+            AppData[] filteredDatas = DataLoader.ProcessingUserInput(chosenNumbers, healthFitnessApp, photographyApp, weatherApp);
 
             //TIPP: Zum Zerlegen eines Textes x in einzelne Zeilen kann die Funktion x.Split('\n') verwendet werden. \n ist das Kürzel für NewLine
         }

@@ -13,17 +13,20 @@ namespace Web_IO
         public string App { get; set; }
         public string Category { get; set; }
         public int Rating { get; set; }
-        public int Reviews { get; set; }
+        public string Reviews { get; set; }
         public string Size { get; set; }
-        public double Installs { get; set; }
+        public string Installs { get; set; }
         public Enums.Type Type { get; set; }
-        public double Price { get; set; }
+        public string Price { get; set; }
         public string ContentRating { get; set; }
-        public Enums.Genres Genres { get; set; } 
-        public DateTime LastUpdated { get; set; }
+        public string Genres { get; set; } 
+        public string LastUpdated { get; set; }
         public string CurrentVersion { get; set; }
         public string AndroidVersion { get; set; }
-
+        public override string ToString()
+        {
+            return base.ToString();
+        }
         #endregion
 
         #region methods
