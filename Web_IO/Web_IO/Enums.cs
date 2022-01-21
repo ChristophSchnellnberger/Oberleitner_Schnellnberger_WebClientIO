@@ -14,7 +14,6 @@ namespace Web_IO
             Free,
             Paid,
         }
-
         public enum Genres
         {
             Photography,

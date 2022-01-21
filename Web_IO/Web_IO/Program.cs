@@ -25,12 +25,35 @@ namespace Web_IO
             AppData[] photographyApp = DataLoader.ReadFromFile(adressPhoApp, seperator);
             AppData[] weatherApp = DataLoader.ReadFromFile(adressWeaApp, seperator);
             #endregion
-            
+
+            //Console output
+            Greeting();
+            MainMenu(commentLine);
+
+
             //TIPP: Zum Zerlegen eines Textes x in einzelne Zeilen kann die Funktion x.Split('\n') verwendet werden. \n ist das Kürzel für NewLine
         }
-        public static void MainMenu()
+        public static void Greeting()
         {
+            Console.WriteLine();
+            Console.WriteLine("Welcome to our Web I/O program");
+            Console.WriteLine();
+            Console.WriteLine("All datas has been read out");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Press enter for further actions");
+            Console.ReadLine();
+            Console.Clear();
+        }
+        public static void MainMenu(string[] commentLine)
+        {
+            int i = 0;
+            Console.WriteLine("MAINMENU");
 
+            foreach (string comment in commentLine)
+            Console.WriteLine("Press " + i + " for " + comment );
+            i++;
         }
         public static void PrintErrorMessage(int errorCode)
         {
