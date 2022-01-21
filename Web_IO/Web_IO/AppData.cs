@@ -9,7 +9,7 @@ namespace Web_IO
     internal class AppData
     {
         #region properties
-
+        
         public string App { get; set; }
         public string Category { get; set; }
         public int Rating { get; set; }

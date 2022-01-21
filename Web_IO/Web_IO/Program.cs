@@ -16,15 +16,21 @@ namespace Web_IO
             string adressHeFIAP = "https://fhwels.s3.eu-central-1.amazonaws.com/PRO1UE_WS21/HealthFitnessApps.CSV";
             string adressPhoApp = "https://fhwels.s3.eu-central-1.amazonaws.com/PRO1UE_WS21/PhotographyApps.CSV";
             string adressWeaApp = "https://fhwels.s3.eu-central-1.amazonaws.com/PRO1UE_WS21/WeatherApps.CSV";
+            char seperator = ';';
             #endregion
 
             #region ReadDatasFromWebFile
-            AppData[] healthFitnessApp = DataLoader.ReadFromFile(adressHeFIAP);
-            AppData[] photographyApp = DataLoader.ReadFromFile(adressPhoApp);
-            AppData[] weatherApp = DataLoader.ReadFromFile(adressWeaApp);
+            string[] commentLine = DataLoader.ReadDatasFromFirstLine(adressHeFIAP, seperator);
+            AppData[] healthFitnessApp = DataLoader.ReadFromFile(adressHeFIAP, seperator);
+            AppData[] photographyApp = DataLoader.ReadFromFile(adressPhoApp, seperator);
+            AppData[] weatherApp = DataLoader.ReadFromFile(adressWeaApp, seperator);
             #endregion
-
+            
             //TIPP: Zum Zerlegen eines Textes x in einzelne Zeilen kann die Funktion x.Split('\n') verwendet werden. \n ist das Kürzel für NewLine
+        }
+        public static void MainMenu()
+        {
+
         }
         public static void PrintErrorMessage(int errorCode)
         {

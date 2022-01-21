@@ -16,6 +16,40 @@ namespace Web_IO
             //Die Klasse DataLoader soll unter Angabe von Max- oder Min Werten für das Property Price, Reviews und/oder Size
             //nur jene Daten zurückgeben welche dem Filterkriterium entsprechen
         }
+
+        public static string[] ReadDatasFromFirstLine(string adressWeb, char seperator)
+        {          
+            WebClient client = new WebClient();
+            string content = client.DownloadString(adressWeb);
+            Stream contentStream = client.OpenRead(adressWeb);
+            StreamReader reader = new StreamReader(contentStream);
+            string firstLine = reader.ReadLine();           
+            string[] place = firstLine.Split(seperator);
+            string[] commentLine = new string[place.Length];
+            int i = 0;
+            int error = 0;
+
+            try
+            {
+                if (firstLine.Contains(",,"))
+                {
+                    firstLine = firstLine.Replace(",,", ",0,");
+                }              
+                foreach (string placeItem in place)
+                {
+                    commentLine[i] = placeItem;
+                    i++;
+                }
+            }
+            #region catches
+            catch (Exception ex)
+            {
+                error = GetErrorCodeFromExeption(ex);
+            }
+            Program.PrintErrorMessage(error);
+            #endregion
+            return commentLine;
+        }
         public static AppData ReadDatasFromCsv(string csvString, char seperator)
         {
             int error = 0;
@@ -23,12 +57,10 @@ namespace Web_IO
 
             try
             {
-
                 if (csvString.Contains(",,"))
                 {
                     csvString = csvString.Replace(",,", ",0,");
                 }
-
                 string[] place = csvString.Split(seperator);
                 readDatas.App = place[0];
                 readDatas.Category = place[1];
@@ -55,11 +87,9 @@ namespace Web_IO
 
             Program.PrintErrorMessage(error);
             #endregion
-
             return readDatas;
         }
-
-        public static AppData[] ReadFromFile(string adressWeb)
+        public static AppData[] ReadFromFile(string adressWeb,char seperator)
         {
             List<AppData> list = new List<AppData>();
 
@@ -67,26 +97,29 @@ namespace Web_IO
             string content = client.DownloadString(adressWeb);
             Stream contentStream = client.OpenRead(adressWeb);
             StreamReader reader = new StreamReader(contentStream);
-           
+            int value = 0;
+            
             while (reader.Peek() != -1)
             {
-                //if (reader.Peek=0)
-                //string line = reader.ReadLine();
-                //AppData readProducts = ReadDatasFromCsv(line, ';');
+                //Read first line
+                for (int i = value; i < 1;i++)
+                {      
+                    string firstLine = reader.ReadLine();
+                    value++;
+                }
 
+                //Read other lines
+                string line = reader.ReadLine();
+                AppData readProducts = ReadDatasFromCsv(line, seperator);              
             }
 
-            string[] values = content.Split('\n');
 
-            foreach (var value in values)
-            {
-
-            }
             //Laden der Daten mit dem WebClient aus 3 Datenquellen (entspricht 3 Kategorien von Apps)
             // Eingabe der Filterkriterien in der Console für alle Apps(oder auf Wunsch auf kategoriespezifisch)
             //Ausgabe der Daten aller 3 Datenquellen am Bildschirm und in eine(!) Datei
             //Option für Profis / Fleißaufgabe
             //Integrieren Sie den DataLoader in Ihren Webshop zum Einkaufen von Apps über ihr Webshop Programm
+
             return list.ToArray();
         }
         private static int GetErrorCodeFromExeption(Exception exception)
