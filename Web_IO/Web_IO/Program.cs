@@ -28,12 +28,12 @@ namespace Web_IO
 
             //Console output
             Greeting();
-            MainMenu(commentLine);
-
+            int[] chosenNumbers = MainMenu(commentLine, healthFitnessApp, photographyApp, weatherApp);
+            DataLoader.ProcessingUserInput(chosenNumbers, healthFitnessApp, photographyApp, weatherApp);
 
             //TIPP: Zum Zerlegen eines Textes x in einzelne Zeilen kann die Funktion x.Split('\n') verwendet werden. \n ist das Kürzel für NewLine
         }
-        public static void Greeting()
+        private static void Greeting()
         {
             Console.WriteLine();
             Console.WriteLine("Welcome to our Web I/O program");
@@ -46,14 +46,75 @@ namespace Web_IO
             Console.ReadLine();
             Console.Clear();
         }
-        public static void MainMenu(string[] commentLine)
+        private static int[] MainMenu(string[] commentLine, AppData[] healthFitnessApp, AppData[] photographyApp, AppData[] weatherApp)
         {
-            int i = 0;
             Console.WriteLine("MAINMENU");
+            Console.WriteLine();
+            bool choosement = false;
+            int[] choosenValues = new int[4];
 
-            foreach (string comment in commentLine)
-            Console.WriteLine("Press " + i + " for " + comment );
-            i++;
+            #region choose genre
+            do
+            {
+                Console.WriteLine("Press \"0\" for " + Enums.Genres.Photography);
+                Console.WriteLine();
+                Console.WriteLine("Press \"1\" for " + Enums.Genres.Weather);
+                Console.WriteLine();
+                Console.WriteLine("Press \"2\" for " + Enums.Genres.HealthFitness);
+                Console.WriteLine();
+                choosenValues[0] = int.Parse(Console.ReadLine());
+                Console.Clear();
+                choosement = CheckIfUserIsSure(0);
+            }
+            while(choosement==false);
+            
+            #endregion
+
+            #region choose filterType
+            do
+            {
+                int i = 0;
+
+                foreach (string comment in commentLine)
+                {
+                    if (i == 3 || i == 4 || i == 7)
+                    {
+                        Console.WriteLine("Press " + i + " for " + comment);
+                        Console.WriteLine();
+                    }
+                    i++;
+                }
+                Console.Write("Press the number of the type you want to filter: ");
+                string inputNumber = Console.ReadLine();
+                choosenValues[1] = int.Parse(inputNumber);
+                choosement = CheckIfUserIsSure(1);              
+            }
+            while (choosement == false);
+            #endregion
+
+            #region choose Min/Max value
+            do
+            {
+                Console.WriteLine("Please choose the lowerbound and upperbound of your filter");
+                Console.WriteLine();
+
+                Console.WriteLine("Please enter the min value: ");
+                choosenValues[2] = int.Parse(Console.ReadLine());
+                choosement = CheckIfUserIsSure(2);               
+            }
+            while(choosement == false);
+
+            do
+            {
+                Console.WriteLine("Please enter the max value: ");
+                choosenValues[3] = int.Parse(Console.ReadLine());
+                Console.Clear();
+                choosement = CheckIfUserIsSure(3);
+            }
+            while (!choosement);
+            #endregion
+
+            return choosenValues;
         }
         public static void PrintErrorMessage(int errorCode)
         {
@@ -129,6 +190,27 @@ namespace Web_IO
             }
             Console.ForegroundColor = ConsoleColor.White;
             #endregion
+        }
+        private static bool CheckIfUserIsSure(int value)
+        {
+            bool choosement = false;
+            Console.Clear();
+
+            Console.WriteLine("If you want to choose an other value press \"x\"");
+            Console.WriteLine("Else press \"ENTER\"");
+            string input = Console.ReadLine();
+            input.Trim();
+            input.ToLower();
+
+            if (input == "x")
+            {
+                choosement = false;
+            }
+            else
+            {
+                choosement = true;
+            }
+            return choosement;
         }
     }
 }
