@@ -9,10 +9,9 @@ namespace Web_IO
     internal class AppData
     {
         #region properties
-        
         public string App { get; set; }
         public string Category { get; set; }
-        public int Rating { get; set; }
+        public string Rating { get; set; }
         public string Reviews { get; set; }
         public string Size { get; set; }
         public string Installs { get; set; }
@@ -28,21 +27,13 @@ namespace Web_IO
             return base.ToString();
         }
         #endregion
-
-        #region methods
-        static void MainAppData()
+        public string ToCsvString(char sep, AppData appData)
         {
-            //Die Klasse AppData soll jeweils einen Datensatz aus den geladenen Daten repräsentieren (je 1 Zeile) mit den jeweiligen Properties.
-            //App	Category	Rating	Reviews	Size	Installs	Type	Price	Content Rating	Genres	Last Updated	Current Ver	Android Ver
-
-
-
-
-
-
+            return appData.App + sep + appData.Category + sep + appData.Rating + sep + appData.Reviews +
+                   sep + appData.Size + sep + appData.Installs + sep + appData.Type + sep + appData.Price +
+                   sep + appData.ContentRating + sep + appData.Genres +
+                   sep + appData.LastUpdated + sep + appData.CurrentVersion + sep + appData.AndroidVersion;
         }
-
-        #endregion
     }
 
 

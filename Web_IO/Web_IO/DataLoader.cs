@@ -10,27 +10,22 @@ namespace Web_IO
 {
     internal class DataLoader
     {
-        static void MainDataLoader()
-        {
-            //Die Klasse DataLoader soll unter Angabe eines Links die Daten laden und als Array oder Liste von AppData Objekten zurückgeben
-            //Die Klasse DataLoader soll unter Angabe von Max- oder Min Werten für das Property Price, Reviews und/oder Size
-            //nur jene Daten zurückgeben welche dem Filterkriterium entsprechen
-        }
-
         public static string[] ReadDatasFromFirstLine(string adressWeb, char seperator)
-        {          
-            WebClient client = new WebClient();
-            string content = client.DownloadString(adressWeb);
-            Stream contentStream = client.OpenRead(adressWeb);
-            StreamReader reader = new StreamReader(contentStream);
-            string firstLine = reader.ReadLine();           
-            string[] place = firstLine.Split(seperator);
-            string[] commentLine = new string[place.Length];
-            int i = 0;
+        {
+            string[] commentLine = new string[0];
             int error = 0;
 
             try
             {
+                WebClient client = new WebClient();
+                string content = client.DownloadString(adressWeb);
+                Stream contentStream = client.OpenRead(adressWeb);
+                StreamReader reader = new StreamReader(contentStream);
+                string firstLine = reader.ReadLine();
+                string[] place = firstLine.Split(seperator);
+                commentLine = new string[place.Length];
+                int i = 0;
+                
                 if (firstLine.Contains(",,"))
                 {
                     firstLine = firstLine.Replace(",,", ",0,");
@@ -40,6 +35,7 @@ namespace Web_IO
                     commentLine[i] = placeItem;
                     i++;
                 }
+                return commentLine;
             }
             #region catches
             catch (Exception ex)
@@ -48,6 +44,7 @@ namespace Web_IO
             }
             Program.PrintErrorMessage(error);
             #endregion
+
             return commentLine;
         }
         public static AppData ReadDatasFromCsv(string csvString, char seperator)
@@ -64,17 +61,18 @@ namespace Web_IO
                 string[] place = csvString.Split(seperator);
                 readDatas.App = place[0];
                 readDatas.Category = place[1];
-                readDatas.Rating = int.Parse(place[2]);
-                readDatas.Reviews = place[3];
+                readDatas.Rating = place[2];
+                string reducedReviews = place[3].Replace("M",string.Empty);
+                readDatas.Reviews = reducedReviews;
                 readDatas.Size = place[4];
                 string reducedInstall = place[5].Replace(",", "");
-                readDatas.Installs = reducedInstall;//double.Parse(reducedInstall.Trim('+'))
+                readDatas.Installs = reducedInstall;
                 readDatas.Type = (Enums.Type)Enum.Parse(typeof(Enums.Type), place[6]);
-                readDatas.Price = place[7];//double.Parse(place[7].Replace('.', ','))
+                readDatas.Price = place[7];
                 readDatas.ContentRating = place[8];
                 string reducedGenre = place[9].Replace("&",string.Empty);
                 reducedGenre= reducedGenre.Replace(" ",string.Empty);
-                readDatas.Genres = reducedGenre; //(Enums.Genres)Enum.Parse(typeof(Enums.Genres), reducedGenre);
+                readDatas.Genres = reducedGenre;
                 readDatas.LastUpdated = place[10];
                 readDatas.CurrentVersion = place[11];
                 readDatas.AndroidVersion = place[12];
@@ -93,121 +91,81 @@ namespace Web_IO
         public static AppData[] ReadFromFile(string adressWeb,char seperator)
         {
             List<AppData> list = new List<AppData>();
+            int error = 0;
 
-            WebClient client = new WebClient();
-            string content = client.DownloadString(adressWeb);
-            Stream contentStream = client.OpenRead(adressWeb);
-            StreamReader reader = new StreamReader(contentStream);
-            int value = 0;
-            
-            while (reader.Peek() != -1)
+            try
             {
-                //Read first line
-                for (int i = value; i < 1;i++)
-                {      
-                    string firstLine = reader.ReadLine();
-                    value++;
-                }
+                WebClient client = new WebClient();
+                string content = client.DownloadString(adressWeb);
+                Stream contentStream = client.OpenRead(adressWeb);
+                StreamReader reader = new StreamReader(contentStream);
+                int value = 0;
 
-                //Read other lines
-                string line = reader.ReadLine();
-                AppData readProducts = ReadDatasFromCsv(line, seperator);
-                list.Add(readProducts);
+                while (reader.Peek() != -1)
+                {
+                    //Read first line
+                    for (int i = value; i < 1; i++)
+                    {
+                        string firstLine = reader.ReadLine();
+                        value++;
+                    }
+                    //Read other lines
+                    string line = reader.ReadLine();
+                    AppData readProducts = ReadDatasFromCsv(line, seperator);
+                    list.Add(readProducts);
+                }
+            }
+            #region catches
+            catch (Exception ex)
+            {
+                error = GetErrorCodeFromExeption(ex);
             }
 
+            Program.PrintErrorMessage(error);
+            #endregion
 
-            //Laden der Daten mit dem WebClient aus 3 Datenquellen (entspricht 3 Kategorien von Apps)
-            // Eingabe der Filterkriterien in der Console für alle Apps(oder auf Wunsch auf kategoriespezifisch)
-            //Ausgabe der Daten aller 3 Datenquellen am Bildschirm und in eine(!) Datei
-            //Option für Profis / Fleißaufgabe
-            //Integrieren Sie den DataLoader in Ihren Webshop zum Einkaufen von Apps über ihr Webshop Programm
+
 
             return list.ToArray();
         }
-        private static int GetErrorCodeFromExeption(Exception exception)
+        public static void WriteProductsToFile(string filePath, AppData[] appsToWrite,string[] firstLine,char seperator)
         {
-            if (exception is IOException)
+            int error = 0;
+            try
             {
-                return 1;
+                
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    foreach(var word in firstLine)
+                    {
+                        writer.Write(word);
+                        writer.Write(seperator);
+                    };
+                    writer.WriteLine();
+                    foreach (var app in appsToWrite)
+                    {
+                        writer.WriteLine(app.ToCsvString(seperator, app));
+                    }
+                }
+            }
+            #region catches
+            catch (Exception ex)
+            {
+                error = GetErrorCodeFromExeption(ex);
             }
 
-            return -1;
-            //            #region catches
-            //catch (ArgumentOutOfRangeException)
-            //{
-            //    error = 15;
-            //}
-            //catch (ArgumentNullException)
-            //{
-            //    error = 1;
-            //}
-            //catch (ArgumentException)
-            //{
-            //    error = 2;
-            //}
-            //catch (OutOfMemoryException)
-            //{
-            //    error = 14;
-            //}
-            //catch (FormatException)
-            //{
-            //    error = 9;
-            //}
-            //catch (OverflowException)
-            //{
-            //    error = 10;
-            //}
-            //catch (IndexOutOfRangeException)
-            //{
-            //    error = 11;
-            //}
-            //catch (NotSupportedException)
-            //{
-            //    error = 12;
-            //}
-            //catch (DirectoryNotFoundException)
-            //{
-            //    error = 3;
-            //}
-            //catch (PathTooLongException)
-            //{
-            //    error = 4;
-            //}
-            //catch (UnauthorizedAccessException)
-            //{
-            //    error = 5;
-            //}
-            //catch (System.Security.SecurityException)
-            //{
-            //    error = 13;
-            //}
-            //catch (FileNotFoundException)
-            //{
-            //    error = 6;
-            //}
-            //catch (IOException)
-            //{
-            //    error = 7;
-            //}
-            //catch (Exception)
-            //{
-            //    error = 8;
-            //}
-
-            //Program.Exeptions(error);
-            //#endregion
-
+            Program.PrintErrorMessage(error);
+            #endregion
 
         }
         public static AppData[] ProcessingUserInput(int[] choosenNumbers, AppData[] healthFitnessApp, AppData[] photographyApp, AppData[] weatherApp)
         {
-            AppData currentType= default;
             AppData[] currentArray = healthFitnessApp;
             List<AppData> returnList = new List<AppData>();
             int lowerBound = choosenNumbers[2];
-            int upperBound = choosenNumbers[3];
-            int currentTypeNumber = 0;
+            int upperBound = choosenNumbers[3];          
             int i = 0;
+            bool conversionSuccessful = false;
 
             switch (choosenNumbers[0])
             {
@@ -218,7 +176,7 @@ namespace Web_IO
                     }
                 case 1:
                     {
-                        currentArray=weatherApp;
+                        currentArray = weatherApp;
                         break;
                     }
                 case 2:
@@ -226,38 +184,121 @@ namespace Web_IO
                         currentArray = healthFitnessApp;
                         break;
                     }
+                case 3 :
+                    {
+                        List<AppData> allApps = new List<AppData>();
+
+                        foreach (AppData appData in photographyApp)
+                        {
+                            allApps.Add(appData);
+                        }
+                        foreach (AppData appData in weatherApp)
+                        {
+                            allApps.Add(appData);
+                        }
+                        foreach(AppData appData in healthFitnessApp)
+                        {
+                            allApps.Add(appData);
+                        }
+                        currentArray = allApps.ToArray();
+                        break;
+                    }
             }
+
             switch (choosenNumbers[1])
             {
                 case 3:
                     {
                         for (i = 0; i < currentArray.Length; i++)
                         {
+                            conversionSuccessful = int.TryParse(currentArray[i].Reviews,out int valueReview);
 
-                            currentTypeNumber = currentArray[i].Rating;
-                            
-                            if (currentTypeNumber <= upperBound && currentTypeNumber >= lowerBound)
+                            if (conversionSuccessful)
                             {
-                                returnList.Add(currentArray[i]);
-                            }                           
+                                if (valueReview <= upperBound && valueReview >= lowerBound)
+                                {
+                                    returnList.Add(currentArray[i]);
+                                }
+                            }                                            
                         }
+                        break;
+                    }
+
+                case 7:
+                    {
+                        
+                        foreach(var item in currentArray)
+                        {
+                            conversionSuccessful = int.TryParse(currentArray[i].Price, out int valuePrice);
+
+                            if (conversionSuccessful)
+                            {
+                                if (valuePrice <= upperBound && valuePrice >= lowerBound)
+                                {
+                                    returnList.Add(currentArray[i]);
+                                }
+                            }
+                            i++;
+                        }
+                        
                         break;
                     }
                 case 4:
                     {
-                        currentTypeNumber = int.Parse(currentArray[i].Price);
-                        break;
-                    }
-                case 7:
-                    {
-                        currentTypeNumber = int.Parse(currentArray[i].Size);
+                        conversionSuccessful = int.TryParse(currentArray[i].Size, out int valueSize);
+
+                        if (conversionSuccessful)
+                        {
+                            if (valueSize <= upperBound && valueSize >= lowerBound)
+                            {
+                                returnList.Add(currentArray[i]);
+                            }
+                        }
                         break;
                     }
             }
-
-            
+           
             return returnList.ToArray();
-
+        }
+        private static int GetErrorCodeFromExeption(Exception exception)
+        {
+            if (exception is IOException)
+            {
+                return 7;
+            }
+            if (exception is ArgumentException)
+            {
+                return 2;
+            }
+            if (exception is ArgumentNullException)
+            {
+                return 1;
+            }
+            if (exception is ArgumentOutOfRangeException)
+            {
+                return 15;
+            }
+            if (exception is FormatException)
+            {
+                return 9;
+            }
+            if (exception is OutOfMemoryException)
+            {
+                return 14;
+            }
+            if (exception is OverflowException)
+            {
+                return 10;
+            }
+            if (exception is WebException)
+            {
+                return 16;
+            }
+            if (exception is NotSupportedException)
+            {
+                return 12;
+            }
+            return -1;
         }
     }
 }

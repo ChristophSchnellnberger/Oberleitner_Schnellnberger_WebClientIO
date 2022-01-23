@@ -8,7 +8,6 @@ namespace Web_IO
 {
     internal class Enums
     {
-        #region enums
         public enum Type
         {
             Free,
@@ -20,7 +19,5 @@ namespace Web_IO
             Weather,
             HealthFitness,
         }
-        #endregion
-
     }
 }
